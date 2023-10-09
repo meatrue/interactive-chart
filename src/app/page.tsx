@@ -1,112 +1,129 @@
-import Image from 'next/image'
+"use client";
+
+import React from 'react';
+import clsx from 'clsx';
+
+import { Select, SelectOption } from '@/components/ui';
+
+const ChartContainer: React.FC<{ children: React.ReactNode}> = ({ children }) => {
+  return (
+    <div className="
+      grid grid-cols-[3.8rem_1fr] grid-rows-[1fr_1.87rem] gap-x-[2rem] gap-y-[1rem]
+      w-full h-[25rem] p-[2.5rem] bg-chart-main rounded-[1.7rem]
+    ">
+      {children}
+    </div>
+  );
+};
+
+interface AxisProps {
+  direction: 'x' | 'y',
+  points: number[],
+}
+
+const Axis: React.FC<AxisProps> = ({ direction, points }) => {
+  return (
+    <div className={clsx(
+      'flex text-[1.25rem]',
+      {'flex-row': direction === 'x'},
+      {'flex-col-reverse gap-[1.25rem]': direction === 'y'},
+    )}>
+      {points.map((point, index) => (
+        <span key={index}>{point}</span>
+      ))}
+    </div>
+  );
+};
+
+const ChartLabel: React.FC<{ children: number }> = ({ children }) => {
+  return (
+    <span className="
+      absolute top-[-0.2rem] translate-y-[-100%] right-[50%] translate-x-1/2
+      py-1 px-2 bg-[#65ff8e] rounded-md opacity-0
+      group-hover:opacity-100 transition-opacity duration-300
+    ">
+      {children}
+    </span>
+  );
+};
+
+interface ChartBarProps {
+  value: number;
+  maxValue: number;
+}
+
+const ChartBar: React.FC<ChartBarProps> = ({ value, maxValue }) => {
+  return (
+    <div className="group relative group-hover:opacity-100">
+      <ChartLabel>{value}</ChartLabel>
+      <div
+        className="w-[1rem] bg-[#000aff] rounded transition-shadow hover:shadow-[0_0_6px_4px_rgba(0,10,255,0.2)]"
+        style={{height: `${(value / maxValue) * 17.5}rem`}}
+      />
+    </div>
+  );
+};
+
+interface ChartProps {
+  data: {};
+}
+
+const Chart: React.FC<ChartProps> = () => {
+  return (
+    <div className='flex items-end justify-between'>
+      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((value, index) => (
+        <ChartBar
+          key={index}
+          value={10000}
+          maxValue={10000}
+        />
+      ))}
+    </div>
+  );
+};
+
+
+const selectOptions = [
+  {
+    title: 'За последний год',
+    value: 'year',
+  },
+  {
+    title: 'За последние 6 месяцев',
+    value: 'six_months',
+  },
+  {
+    title: 'За последний месяц',
+    value: 'month',
+  }
+];
 
 export default function Home() {
+  const [selectedOption, setSelectedOption] = React.useState<SelectOption>(
+    selectOptions[selectOptions.length - 1]
+  );
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <main className="grow flex flex-col justify-center items-center">
+      <div className="flex flex-col gap-[1.75rem] w-[62.2rem] h-[29.75rem]">
+        <div className="flex justify-end">
+          <Select
+            options={selectOptions}
+            selectedOption={selectedOption}
+            onOptionSelect={setSelectedOption}
+            className="min-w-[23.75rem]"
+          />
         </div>
-      </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+          <ChartContainer>
+            <Axis
+              direction='y'
+              points={[0, 500, 1000, 2000, 5000, 10000]}
+            />
+            <Chart data={{}} />
+            <div className="col-start-2 col-span-1">
+              X
+            </div>
+        </ChartContainer>
       </div>
     </main>
   )

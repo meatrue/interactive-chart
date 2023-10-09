@@ -8,11 +8,18 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
+        'chart-main': 'rgb(255 0 245 / 0.05)',
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
+      transitionProperty: {
+        'height': 'height',
+        'visibility': 'visibility',
+      }
     },
   },
   plugins: [],
