@@ -24,10 +24,7 @@ interface ChartBarsContainerProps {
 
 const ChartBarsContainer: React.FC<ChartBarsContainerProps> = ({ children, className }) => {
   return (
-    <div className={clsx(
-      'flex',
-      className
-    )}>
+    <div className={clsx('flex',className)}>
       {children}
     </div>
   );
@@ -48,9 +45,7 @@ export const Chart: React.FC<ChartProps> = ({
 }) => {
   return (
     <ChartContainer>
-      <AxisY
-        points={axisYPoints}
-      />
+      <AxisY points={axisYPoints} />
       
       <ChartBarsContainer className={chartGap[period].bar}>
         {values.map((value, index) => (
@@ -62,11 +57,7 @@ export const Chart: React.FC<ChartProps> = ({
         ))}
       </ChartBarsContainer>
 
-      <AxisX
-        variant={period}
-        points={axisXPoints}
-        className="col-start-2 col-span-1"
-      />
+      <AxisX points={axisXPoints} variant={period} />
     </ChartContainer>
   );
 }; 

@@ -42,7 +42,7 @@ interface AxisXProps {
 export const AxisX: React.FC<AxisXProps> = ({ variant, points, className }) => {
   return (
     <div className={clsx(
-      'flex',
+      'col-start-2 col-span-1 flex',
       chartGap[variant].axis,
       className
     )}>

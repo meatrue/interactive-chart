@@ -2,9 +2,8 @@
 
 import React from 'react';
 
-import { Select, SelectOption } from '@/components/ui';
+import { Select, SelectOption, Chart } from '@/components';
 import { ChartPeriod } from '@/types';
-import { Chart } from '@/components/chart';
 import { isChartPeriod } from '@/lib';
 import { chartApi } from '@/api';
 
@@ -27,6 +26,16 @@ const selectOptions: ChartSelectOption[] = [
     value: 'month',
   }
 ];
+
+const PageLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  return (
+    <main className="grow flex flex-col justify-center items-center">
+      <div className="flex flex-col gap-[1.75rem] w-[62.2rem] h-[29.75rem] overflow-hidden">
+        {children}
+      </div>
+    </main>
+  );
+};
 
 export default function Home() {
   const [selectedOption, setSelectedOption] = React.useState<SelectOption>(
@@ -58,24 +67,22 @@ export default function Home() {
   };
 
   return (
-    <main className="grow flex flex-col justify-center items-center">
-      <div className="flex flex-col gap-[1.75rem] w-[62.2rem] h-[29.75rem] overflow-hidden">
-        <div className="flex justify-end">
-          <Select
-            options={selectOptions}
-            selectedOption={selectedOption}
-            onOptionSelect={handleSelectOption}
-            className="min-w-[23.75rem]"
-          />
-        </div>
-
-        <Chart
-          values={chartValues}
-          axisYPoints={[0, 500, 1000, 2000, 5000, 10000]}
-          axisXPoints={axisXPoints}
-          period={selectedValue as ChartPeriod}
+    <PageLayout>
+      <div className="flex justify-end">
+        <Select
+          options={selectOptions}
+          selectedOption={selectedOption}
+          onOptionSelect={handleSelectOption}
+          className="min-w-[23.75rem]"
         />
       </div>
-    </main>
+
+      <Chart
+        values={chartValues}
+        axisYPoints={[0, 500, 1000, 2000, 5000, 10000]}
+        axisXPoints={axisXPoints}
+        period={selectedValue as ChartPeriod}
+      />
+    </PageLayout>
   )
 }
