@@ -18,7 +18,6 @@ const config: Config = {
       },
       transitionProperty: {
         'height': 'height',
-        'visibility': 'visibility',
       }
     },
   },

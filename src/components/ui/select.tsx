@@ -6,7 +6,7 @@ import { ArrowDownIcon } from ".";
 export type SelectOption = {
   title: string,
   value: string,
-}
+};
 
 const SelectGeneralStyles = 'text-[1.5rem] leading-[1.25] border-2 border-solid border-[#000aff] rounded-[1.75rem]';
 
