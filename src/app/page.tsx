@@ -4,7 +4,7 @@ import React from 'react';
 
 import { Select, SelectOption, Chart } from '@/components';
 import { ChartPeriod } from '@/types';
-import { isChartPeriod } from '@/lib';
+import { getAxisYPoints, isChartPeriod } from '@/lib';
 import { chartApi } from '@/api';
 
 type ChartSelectOption = {
@@ -12,7 +12,7 @@ type ChartSelectOption = {
   value: 'year' | 'half_year' | 'month',
 };
 
-const selectOptions: ChartSelectOption[] = [
+const chartPeriodOptions: ChartSelectOption[] = [
   {
     title: 'За последний год',
     value: 'year',
@@ -38,23 +38,23 @@ const PageLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 };
 
 export default function Home() {
-  const [selectedOption, setSelectedOption] = React.useState<SelectOption>(
-    selectOptions[selectOptions.length - 1]
+  const [selectedChartPeriod, setSelectedChartPeriod] = React.useState<SelectOption>(
+    chartPeriodOptions[chartPeriodOptions.length - 1]
   );
   const [selectedChartData, setSelectedChartData] = React.useState<
     {[key: string]: number} | null
   >(null);
 
-  const selectedValue = selectedOption.value;
+  const selectedPeriod = selectedChartPeriod.value;
 
   React.useEffect(() => {
-    if (!isChartPeriod(selectedValue)) return;
+    if (!isChartPeriod(selectedPeriod)) return;
 
-    chartApi.getData(selectedValue)
+    chartApi.getData(selectedPeriod)
       .then((result) => setSelectedChartData(result.data));
-  }, [selectedValue]);
+  }, [selectedPeriod]);
 
-  const chartValues: number[] = selectedChartData
+  const chartValues = selectedChartData
     ? Object.values(selectedChartData)
     : [];
 
@@ -62,16 +62,20 @@ export default function Home() {
     ? Object.keys(selectedChartData)
     : [];
 
+  const axisYpoints = chartValues.length
+    ? getAxisYPoints(Math.max(...chartValues), 6)
+    : [];
+
   const handleSelectOption = (option: SelectOption): void => {
-    setSelectedOption(option);
+    setSelectedChartPeriod(option);
   };
 
   return (
     <PageLayout>
       <div className="flex justify-end">
         <Select
-          options={selectOptions}
-          selectedOption={selectedOption}
+          options={chartPeriodOptions}
+          selectedOption={selectedChartPeriod}
           onOptionSelect={handleSelectOption}
           className="min-w-[23.75rem]"
         />
@@ -79,9 +83,9 @@ export default function Home() {
 
       <Chart
         values={chartValues}
-        axisYPoints={[0, 500, 1000, 2000, 5000, 10000]}
+        axisYPoints={axisYpoints}
         axisXPoints={axisXPoints}
-        period={selectedValue as ChartPeriod}
+        period={selectedPeriod as ChartPeriod}
       />
     </PageLayout>
   )

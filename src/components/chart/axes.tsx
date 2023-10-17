@@ -6,7 +6,7 @@ import { ChartPeriod } from "@/types";
 export const AxisY: React.FC<{ points: number[] }> = ({ points }) => {
   return (
     <div className=
-      "flex flex-col-reverse gap-[1.25rem]"
+      "flex flex-col-reverse justify-between gap-[1.25rem] leading-[1]"
     >
       {points.map((point, index) => (
         <span key={index}>{point}</span>
